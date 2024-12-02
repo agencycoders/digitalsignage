@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Cores principais */
+  --color-primary: #9dff32; /* Verde neon */
+  --color-primary-dark: #7acc28;
+  --color-primary-light: #b4ff66;
+  
+  /* Cores de fundo */
+  --color-bg-base: #0f172a;    /* Azul escuro profundo */
+  --color-bg-dark: #1e293b;    /* Azul escuro médio */
+  --color-bg-light: #334155;   /* Azul escuro claro */
+  --color-accent: #134e4a;     /* Verde escuro para contraste */
+  
+  /* Cores de texto */
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  
+  /* Dimensões */
+  --header-height: 4rem;
+  --footer-height: 4rem;
+  --container-width: 1280px;
+}
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-[var(--color-bg-base)] via-[var(--color-bg-dark)] to-[var(--color-accent)] text-[var(--color-text)] min-h-screen;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-size: 200% 200%;
+    animation: gradientMove 15s ease infinite;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  .container-fluid {
+    @apply mx-auto px-4 max-w-[var(--container-width)];
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-[var(--color-primary)] text-[var(--color-bg-base)] hover:bg-[var(--color-primary-dark)] shadow-lg;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-outline {
+    @apply border-2 border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-[var(--color-bg-base)];
+  }
+
+  .card {
+    @apply bg-[var(--color-bg-dark)] backdrop-blur-sm rounded-xl border border-[var(--color-bg-light)] shadow-xl hover:shadow-2xl transition-all duration-200;
+    background-color: rgba(var(--color-bg-dark), 0.8);
+  }
+
+  .card-hover {
+    @apply hover:border-[var(--color-primary)] hover:bg-[var(--color-bg-light)] transition-all duration-200;
+    opacity: 0.8;
+  }
+
+  .input {
+    @apply w-full px-4 py-2 bg-[var(--color-bg-dark)] backdrop-blur-sm border border-[var(--color-bg-light)] rounded-lg text-[var(--color-text)]
+    focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-20
+    placeholder:text-[var(--color-text-muted)];
+    background-color: rgba(var(--color-bg-dark), 0.8);
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)] bg-clip-text text-transparent;
+  }
+
+  .gradient-border {
+    @apply border-transparent bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)] 
+    bg-clip-border border-2 border-transparent;
+  }
+
+  .nav-link {
+    @apply px-4 py-2 rounded-lg text-[var(--color-text)] hover:text-[var(--color-primary)] hover:bg-[var(--color-bg-light)] transition-all duration-200;
+    opacity: 0.9;
+  }
+
+  .nav-link-active {
+    @apply text-[var(--color-primary)] bg-[var(--color-bg-light)];
+    opacity: 0.9;
+  }
+
+  .glass-effect {
+    @apply bg-[var(--color-bg-dark)] backdrop-blur-sm border border-[var(--color-bg-light)];
+    background-color: rgba(var(--color-bg-dark), 0.8);
+  }
+}
+
+/* Animações */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[var(--color-bg-dark)];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[var(--color-primary)] bg-opacity-20 rounded-full hover:bg-[var(--color-primary)] hover:bg-opacity-30;
+}
