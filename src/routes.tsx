@@ -20,7 +20,8 @@ import { AdminPlans } from './pages/Admin/Plans';
 import { AdminSettings } from './pages/Admin/Settings';
 import { AdminLayout } from './components/Admin/AdminLayout';
 import { useStore } from './store';
-import { useNavigate, useEffect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 // Componente de erro personalizado
 const ErrorBoundary = () => {
