@@ -12,9 +12,9 @@ export const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    checkAuth();
-    if (isAuthenticated) {
-      navigate('/dashboard');
+    const redirectPath = checkAuth();
+    if (isAuthenticated && redirectPath) {
+      navigate(redirectPath);
     }
   }, [isAuthenticated, navigate, checkAuth]);
 
@@ -24,8 +24,8 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      await login(email, password);
-      navigate('/dashboard');
+      const redirectPath = await login(email, password);
+      navigate(redirectPath);
     } catch (err) {
       setError('Email ou senha inválidos');
       console.error('Erro ao fazer login:', err);

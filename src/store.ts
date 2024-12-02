@@ -7,15 +7,16 @@ interface User {
   email: string;
   company: string;
   role: string;
+  permissions: string[];
   plan: string;
 }
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<string>;
   logout: () => void;
-  checkAuth: () => void;
+  checkAuth: () => string | null;
 }
 
 export const useStore = create<AuthState>((set) => ({
@@ -30,12 +31,14 @@ export const useStore = create<AuthState>((set) => ({
       try {
         const user = JSON.parse(userStr);
         set({ user, isAuthenticated: true });
+        return user.role === 'Super Admin' ? '/admin' : '/dashboard';
       } catch {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         set({ user: null, isAuthenticated: false });
       }
     }
+    return null;
   },
 
   login: async (email: string, password: string) => {
@@ -63,6 +66,9 @@ export const useStore = create<AuthState>((set) => ({
       user: userWithoutPassword,
       isAuthenticated: true
     });
+
+    // Retorna o caminho apropriado baseado no papel do usuário
+    return user.role === 'Super Admin' ? '/admin' : '/dashboard';
   },
 
   logout: () => {

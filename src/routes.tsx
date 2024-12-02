@@ -13,6 +13,14 @@ import { Settings } from './pages/Dashboard/Settings';
 import { DashboardLayout } from './components/Dashboard/DashboardLayout';
 import { Header } from './components/Layout/Header';
 import { NotFound } from './pages/NotFound';
+import { AdminDashboard } from './pages/Admin/Dashboard';
+import { AdminUsers } from './pages/Admin/Users';
+import { AdminContent } from './pages/Admin/Content';
+import { AdminPlans } from './pages/Admin/Plans';
+import { AdminSettings } from './pages/Admin/Settings';
+import { AdminLayout } from './components/Admin/AdminLayout';
+import { useStore } from './store';
+import { useNavigate, useEffect } from 'react-router-dom';
 
 // Componente de erro personalizado
 const ErrorBoundary = () => {
@@ -51,22 +59,39 @@ const PublicLayout = () => {
   );
 };
 
-// Simulação de autenticação
-const isAuthenticated = () => {
-  const token = localStorage.getItem('token');
-  return token !== null;
+// Componente para proteger rotas administrativas
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, isAuthenticated } = useStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    } else if (user?.role !== 'Super Admin') {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, user, navigate]);
+
+  return isAuthenticated && user?.role === 'Super Admin' ? <>{children}</> : null;
 };
 
-// Componente para proteger rotas
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  if (!isAuthenticated()) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
+// Componente para proteger rotas de cliente
+const ClientRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
+
+  return isAuthenticated ? <>{children}</> : null;
 };
 
 export const router = createBrowserRouter([
   {
+    path: '/',
     element: <PublicLayout />,
     errorElement: <ErrorBoundary />,
     children: [
@@ -95,11 +120,11 @@ export const router = createBrowserRouter([
   {
     path: '/dashboard',
     element: (
-      <ProtectedRoute>
+      <ClientRoute>
         <DashboardLayout>
           <Outlet />
         </DashboardLayout>
-      </ProtectedRoute>
+      </ClientRoute>
     ),
     errorElement: <ErrorBoundary />,
     children: [
@@ -126,6 +151,39 @@ export const router = createBrowserRouter([
       {
         path: 'settings',
         element: <Settings />,
+      },
+    ],
+  },
+  {
+    path: '/admin',
+    element: (
+      <AdminRoute>
+        <AdminLayout>
+          <Outlet />
+        </AdminLayout>
+      </AdminRoute>
+    ),
+    errorElement: <ErrorBoundary />,
+    children: [
+      {
+        path: '',
+        element: <AdminDashboard />,
+      },
+      {
+        path: 'users',
+        element: <AdminUsers />,
+      },
+      {
+        path: 'content',
+        element: <AdminContent />,
+      },
+      {
+        path: 'plans',
+        element: <AdminPlans />,
+      },
+      {
+        path: 'settings',
+        element: <AdminSettings />,
       },
     ],
   },
